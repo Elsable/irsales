@@ -8,11 +8,18 @@ import (
 
 // SetRoutes add routes(HttpHandler)
 func SetRoutes(app Framework) {
-	app.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
+
+	// UI/View routes
+	app.Static("/", "ui/dist")
+
+	// Api Routes
+	api := app.Group("/api")
+
+	api.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "This API is running")
 	})
 
-	app.GET("/test/:name", func(c echo.Context) error {
+	api.GET("/:name", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, "+c.Param("name"))
 	})
 
