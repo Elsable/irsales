@@ -10,4 +10,5 @@ type Framework struct {
 // New sets the frameworks app object and start adding routes,middlewarers,etc
 func New(app Framework) {
 	SetRoutes(app)
+	SetDB()
 }
