@@ -1,13 +1,14 @@
-package config
+package routes
 
 import (
 	"net/http"
 
 	"github.com/labstack/echo"
+	"github.com/nosnibor89/irsales/controllers"
 )
 
 // SetRoutes add routes(HttpHandler)
-func SetRoutes(app Framework) {
+func SetRoutes(app *echo.Echo) {
 
 	// UI/View routes
 	app.Static("/", "ui/dist")
@@ -18,6 +19,8 @@ func SetRoutes(app Framework) {
 	api.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "This API is running")
 	})
+
+	api.GET("/company", controllers.GetCompanies)
 
 	api.GET("/:name", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, "+c.Param("name"))

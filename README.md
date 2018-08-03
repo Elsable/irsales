@@ -5,3 +5,12 @@
 
 ## Model Info
 
+
+## Endpoints
+
+/company
+
+/contactperson
+
+/quote
+
