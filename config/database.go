@@ -20,13 +20,13 @@ func SetDB() {
 	session.SetMode(mgo.Monotonic, true)
 	db = session.DB("irsales")
 
-	testUser := struct {
-		Name, Lastname string
-	}{
-		Name:     "Robi",
-		Lastname: "Marquez",
-	}
-	db.C("users").Insert(&testUser)
+	// testUser := struct {
+	// 	Name, Lastname string
+	// }{
+	// 	Name:     "Robi",
+	// 	Lastname: "Marquez",
+	// }
+	// db.C("users").Insert(&testUser)
 }
 
 func DB() *mgo.Database {
