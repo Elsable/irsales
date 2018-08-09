@@ -28,7 +28,7 @@ type (
 var db *mgo.Database
 
 // Connect creates a session with a mongodb server and set a db in the repository. Return the session so anybody can close it later
-func Connect() mongo.MgoSession {
+func Connect() *mgo.Session {
 	session, err := mgo.Dial("mongodb://admin:admin123@ds018508.mlab.com:18508/irsales")
 	if err != nil {
 		log.Println("Cound not dial to DB")
@@ -39,10 +39,10 @@ func Connect() mongo.MgoSession {
 	session.SetMode(mgo.Monotonic, true)
 	db = session.DB("irsales")
 
-	return mongo.MgoSession{session}
+	return mongo.MgoSession{Session: session}.Session
 }
 
 // DB is a holder for the mongo db instance
 func DB() *mongo.MgoDatabase {
-	return &mongo.MgoDatabase{db}
+	return &mongo.MgoDatabase{Database: db}
 }

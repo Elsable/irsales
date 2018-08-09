@@ -17,7 +17,7 @@ type Session interface {
 
 // MgoSession is currently a Mongo session.
 type MgoSession struct {
-	*mgo.Session
+	Session *mgo.Session
 }
 
 // DataLayer is an interface to access to the database struct.
@@ -27,7 +27,7 @@ type DataLayer interface {
 
 // MgoCollection wraps a mgo.Collection to embed methods in models.
 type MgoCollection struct {
-	*mgo.Collection
+	Collection *mgo.Collection
 }
 
 // Collection is an interface to access to the collection struct.
@@ -41,10 +41,11 @@ type Collection interface {
 
 // MgoDatabase wraps a mgo.Database to embed methods in models.
 type MgoDatabase struct {
-	*mgo.Database
+	Database *mgo.Database
 }
 
 // C shadows *mgo.DB to returns a DataLayer interface instead of *mgo.Database.
 func (d MgoDatabase) C(name string) Collection {
-	return &MgoCollection{Collection: d.Database.C(name)}
+	// return &MgoCollection{ Collection: d.Database.C(name)}
+	return MgoCollection{Collection: d.Database.C(name)}.Collection
 }
