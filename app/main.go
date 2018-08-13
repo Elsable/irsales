@@ -9,10 +9,11 @@ import (
 // Run does all the heavy lifting for the app. Set routes, connect to DB, set logging, set middlewares, etc
 func Run() {
 	app := echo.New()
-	routes.SetRoutes(app)
 
+	// Let's set DB connection first
 	session := repository.Connect()
 	defer session.Close()
 
+	routes.SetRoutes(app)
 	app.Logger.Fatal(app.Start(":3000"))
 }

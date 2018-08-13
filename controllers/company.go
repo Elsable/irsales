@@ -3,22 +3,45 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/nosnibor89/irsales/model"
+
+	"github.com/nosnibor89/irsales/services"
+
 	"github.com/labstack/echo"
 )
 
+// CompanyController have all the handler for company resources
+type CompanyController struct {
+	ServiceHandler services.CompanyServiceHandler
+}
+
+// NewCompanyController creates a new controller
+func NewCompanyController() CompanyController {
+	return CompanyController{ServiceHandler: services.NewCompanyService()}
+}
+
 // GetCompanies return all the companies. Using query string as filters
-func GetCompanies(c echo.Context) error {
-	// companyRepo := repository.CompanyRepository{}
-
-	// companyRepo.GetCompanies()
-
+func (cc CompanyController) GetCompanies(c echo.Context) error {
 	return c.JSON(http.StatusOK, Alive(c))
 }
 
-func SaveCompany(c echo.Context) error {
-	// companyRepo := repository.CompanyRepository{}
+// SaveCompany is the handler for saving a company
+func (cc CompanyController) SaveCompany(c echo.Context) error {
+	var created model.Company
 
-	// companyRepo.GetCompanies()
+	company := model.Company{}
 
-	return c.JSON(http.StatusOK, Alive(c))
+	err := c.Bind(&company)
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	created, err = cc.ServiceHandler.CreateCompany(&company)
+
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, created)
 }

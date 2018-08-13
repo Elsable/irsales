@@ -20,7 +20,9 @@ func SetRoutes(app *echo.Echo) {
 		return c.String(http.StatusOK, "This API is running")
 	})
 
-	api.GET("/company", controllers.GetCompanies)
+	companyController := controllers.NewCompanyController()
+
+	api.POST("/company", companyController.SaveCompany)
 
 	api.GET("/:name", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, "+c.Param("name"))

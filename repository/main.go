@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	CompanyCollection = "Company"
+	// CompanyCollection is the name of the mongo db collection for companies
+	CompanyCollection = "company"
 )
 
 type (
@@ -20,12 +21,13 @@ type (
 	CompanyRepository interface {
 		All() []model.Company
 		Find(id int) (model.Company, error)
-		Create(model.Company) error
-		Update(model.Company) error
+		Create(*model.Company) (model.Company, error)
+		Update(*model.Company) (model.Company, error)
 	}
 )
 
-var db *mgo.Database
+// DB holds the mongodb session
+var DB *mgo.Database
 
 // Connect creates a session with a mongodb server and set a db in the repository. Return the session so anybody can close it later
 func Connect() *mgo.Session {
@@ -37,12 +39,7 @@ func Connect() *mgo.Session {
 
 	// Optional. Switch the session to a monotonic behavior.
 	session.SetMode(mgo.Monotonic, true)
-	db = session.DB("irsales")
+	DB = session.DB("irsales")
 
 	return mongo.MgoSession{Session: session}.Session
-}
-
-// DB is a holder for the mongo db instance
-func DB() *mongo.MgoDatabase {
-	return &mongo.MgoDatabase{Database: db}
 }

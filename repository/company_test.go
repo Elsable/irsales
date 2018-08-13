@@ -16,7 +16,7 @@ func TestInsert(t *testing.T) {
 		Name: "Testing",
 	}
 
-	if err := companyRepo.Create(&company); err != nil {
+	if _, err := companyRepo.Create(&company); err != nil {
 		t.Error("Error testing CompanyRepository.Find", "Got"+company.Name)
 	}
 }

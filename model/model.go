@@ -1,10 +1,7 @@
 package model
 
-import (
-	"gopkg.in/mgo.v2/bson"
-)
-
 // Model holds generic information for models
 type Model struct {
-	ID bson.ObjectId `bson:"_id" json:"id"`
+	CreatedAt string `bson:"createdAt,omitempty" json:"createdAt"`
+	UpdatedAt string `bson:"updatedAt,omitempty" json:"updatedAt"`
 }
