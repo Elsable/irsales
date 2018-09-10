@@ -20,3 +20,7 @@ func TestInsert(t *testing.T) {
 		t.Error("Error testing CompanyRepository.Find", "Got"+company.Name)
 	}
 }
+
+func TestAll(t *testing.T) {
+	// TODO: To be implemented
+}

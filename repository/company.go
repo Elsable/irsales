@@ -20,7 +20,10 @@ func CompanyDataStoreWithDefault() *CompanyDataStore {
 
 // All fetch companies from DB
 func (dataStore *CompanyDataStore) All() []model.Company {
-	return []model.Company{}
+	var companies []model.Company
+	c := dataStore.Database.C(CompanyCollection)
+	c.Find(bson.M{}).All(&companies)
+	return companies
 }
 
 // Find company by id

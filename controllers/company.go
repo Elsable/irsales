@@ -22,7 +22,8 @@ func NewCompanyController() CompanyController {
 
 // GetCompanies return all the companies. Using query string as filters
 func (cc CompanyController) GetCompanies(c echo.Context) error {
-	return c.JSON(http.StatusOK, Alive(c))
+	companies := cc.ServiceHandler.Find()
+	return c.JSON(http.StatusOK, companies)
 }
 
 // SaveCompany is the handler for saving a company
@@ -37,7 +38,7 @@ func (cc CompanyController) SaveCompany(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	created, err = cc.ServiceHandler.CreateCompany(&company)
+	created, err = cc.ServiceHandler.Create(&company)
 
 	if err != nil {
 		return err

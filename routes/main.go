@@ -23,6 +23,7 @@ func SetRoutes(app *echo.Echo) {
 	companyController := controllers.NewCompanyController()
 
 	api.POST("/company", companyController.SaveCompany)
+	api.GET("/company", companyController.GetCompanies)
 
 	api.GET("/:name", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, "+c.Param("name"))

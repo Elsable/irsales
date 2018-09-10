@@ -8,7 +8,8 @@ import (
 
 // CompanyServiceHandler is the interface for the company service
 type CompanyServiceHandler interface {
-	CreateCompany(company *model.Company) (model.Company, error)
+	Create(company *model.Company) (model.Company, error)
+	Find() []model.Company
 }
 
 // CompanyService holds the functionality for Companies features
@@ -27,8 +28,8 @@ func NewCompanyServiceWith(repo repository.CompanyRepository) CompanyService {
 	return CompanyService{Repository: repo}
 }
 
-// CreateCompany creates a company
-func (cs CompanyService) CreateCompany(company *model.Company) (model.Company, error) {
+// Create creates a company
+func (cs CompanyService) Create(company *model.Company) (model.Company, error) {
 
 	created, err := cs.Repository.Create(company)
 	if err != nil {
@@ -36,4 +37,10 @@ func (cs CompanyService) CreateCompany(company *model.Company) (model.Company, e
 	}
 
 	return created, nil
+}
+
+// Find fetch companies
+func (cs CompanyService) Find() []model.Company {
+	companies := cs.Repository.All()
+	return companies
 }
