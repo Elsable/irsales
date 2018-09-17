@@ -27,8 +27,13 @@ func (dataStore *CompanyDataStore) All() []model.Company {
 }
 
 // Find company by id
-func (dataStore *CompanyDataStore) Find(id int) (model.Company, error) {
-	return model.Company{}, nil
+func (dataStore *CompanyDataStore) FindOne(id string) (model.Company, error) {
+	var company model.Company
+
+	c := dataStore.Database.C(CompanyCollection)
+	c.Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&company)
+
+	return company, nil
 }
 
 // Create stores a company in DB

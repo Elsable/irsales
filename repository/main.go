@@ -20,7 +20,7 @@ type (
 	// CompanyRepository acts as an interface for comopany datasource
 	CompanyRepository interface {
 		All() []model.Company
-		Find(id int) (model.Company, error)
+		FindOne(id string) (model.Company, error)
 		Create(*model.Company) (model.Company, error)
 		Update(*model.Company) (model.Company, error)
 	}

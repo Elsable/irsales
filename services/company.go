@@ -10,6 +10,7 @@ import (
 type CompanyServiceHandler interface {
 	Create(company *model.Company) (model.Company, error)
 	Find() []model.Company
+	FindOne(id string) (model.Company, error)
 }
 
 // CompanyService holds the functionality for Companies features
@@ -43,4 +44,14 @@ func (cs CompanyService) Create(company *model.Company) (model.Company, error) {
 func (cs CompanyService) Find() []model.Company {
 	companies := cs.Repository.All()
 	return companies
+}
+
+// FindOne fetch a company using id provided
+func (cs CompanyService) FindOne(id string) (model.Company, error) {
+	found, err := cs.Repository.FindOne(id)
+	if err != nil || string(found.ID) == "" {
+		return model.Company{}, err
+	}
+
+	return found, nil
 }

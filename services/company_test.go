@@ -8,26 +8,25 @@ import (
 
 	"github.com/nosnibor89/irsales/model"
 	"github.com/nosnibor89/irsales/services"
+	"github.com/nosnibor89/irsales/test"
 )
 
 type mockRepository struct{}
 
 func (mr mockRepository) All() []model.Company {
-	return []model.Company{
-		model.Company{
-			ID:       bson.NewObjectId(),
-			Name:     "Tests company 1",
-			Location: "Caracas",
-		},
-		model.Company{
-			ID:       bson.NewObjectId(),
-			Name:     "Tests company 2",
-			Location: "Valencia",
-		},
-	}
+	return test.MockCompanyData()
 }
 
-func (mr mockRepository) Find(id int) (model.Company, error) {
+func (mr mockRepository) Find(id string) (model.Company, error) {
+	return model.Company{}, nil
+}
+
+func (mr mockRepository) FindOne(id string) (model.Company, error) {
+	for _, company := range test.MockCompanyData() {
+		if company.ID == bson.ObjectId(id) {
+			return company, nil
+		}
+	}
 	return model.Company{}, nil
 }
 
@@ -54,10 +53,22 @@ func TestCreate(t *testing.T) {
 func TestAll(t *testing.T) {
 	cs := services.CompanyService{Repository: &mockRepository{}}
 
+	companyData := test.MockCompanyData()
+	expectedCompany := companyData[0]
+	id := string(expectedCompany.ID)
+
+	if company, err := cs.FindOne(id); company.ID == "" || err != nil {
+		t.Errorf("Company not correctly fetched - got %v ,expected %v", company.ID, expectedCompany.ID)
+	}
+}
+
+func TestFind(t *testing.T) {
+	cs := services.CompanyService{Repository: &mockRepository{}}
+
 	companies := cs.Find()
 	count := len(companies)
 
 	if count != 2 {
-		t.Errorf("Companies not correcly fetched - got %v ,expected %v", count, 2)
+		t.Errorf("Companies not correctly fetched - got %v ,expected %v", count, 2)
 	}
 }

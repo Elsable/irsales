@@ -32,19 +32,16 @@ func (mc mockCompanyService) Create(company *model.Company) (model.Company, erro
 }
 
 func (mc mockCompanyService) Find() []model.Company {
+	return test.MockCompanyData()
+}
 
-	return []model.Company{
-		model.Company{
-			ID:       bson.NewObjectId(),
-			Name:     "Tests company 1",
-			Location: "Caracas",
-		},
-		model.Company{
-			ID:       bson.NewObjectId(),
-			Name:     "Tests company 2",
-			Location: "Valencia",
-		},
+func (mc mockCompanyService) FindOne(id string) (model.Company, error) {
+	for _, company := range test.MockCompanyData() {
+		if company.ID == bson.ObjectIdHex(id) {
+			return company, nil
+		}
 	}
+	return model.Company{}, nil
 }
 
 func TestSaveCompany(t *testing.T) {
@@ -88,11 +85,40 @@ func TestFindCompanies(t *testing.T) {
 
 	foundCompanies := []model.Company{}
 	json.Unmarshal([]byte(resJson), &foundCompanies)
-
 	first := foundCompanies[0]
 
 	if first.Name != "Tests company 1" {
 		t.Errorf("Could not fetch companies correctly, got: %v, expected: %v.", first.Name, "Tests company 1")
+	}
+
+	if http.StatusOK != rec.Code {
+		t.Errorf("Could not fetch companies, wrong http status code receive, got: %v, expected: %v.", rec.Code, http.StatusOK)
+	}
+}
+
+func TestFindCompanyById(t *testing.T) {
+
+	id := "507f191e810c19729de860ea"
+	app := test.TestApp
+
+	req := httptest.NewRequest(echo.GET, "/api/company", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := app.NewContext(req, rec)
+
+	c.SetPath("/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(id)
+
+	companyController := controllers.CompanyController{ServiceHandler: mockCompanyService{}}
+	companyController.GetCompanyById(c)
+	resJson := rec.Body.String()
+
+	company := model.Company{}
+	json.Unmarshal([]byte(resJson), &company)
+
+	if company.ID != bson.ObjectIdHex(id) {
+		t.Errorf("Could not fetch company correctly, got: %v, expected: %v.", company.ID, id)
 	}
 
 	if http.StatusOK != rec.Code {

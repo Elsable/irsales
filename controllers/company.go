@@ -46,3 +46,20 @@ func (cc CompanyController) SaveCompany(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, created)
 }
+
+// SaveCompany is the handler for saving a company
+func (cc CompanyController) GetCompanyById(c echo.Context) error {
+	id := c.Param("id")
+
+	company, err := cc.ServiceHandler.FindOne(id)
+
+	if err != nil {
+		return err
+	}
+
+	if company.ID == "" {
+		return c.JSON(http.StatusNotFound, nil)
+	}
+
+	return c.JSON(http.StatusOK, company)
+}
